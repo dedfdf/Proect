@@ -2,9 +2,9 @@ import pygame
 from pygame.math import Vector2 as vec2
 from PygameProject.sprite import player_group, all_sprite, wall_group, collision_circle_group
 from PygameProject.const import SPEED_PLAYER, TILE_WIDTH, TILE_HEIGHT
-import math
 
 
+# Класс игрока
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, weapon):
         super().__init__(player_group, all_sprite)
@@ -22,15 +22,19 @@ class Player(pygame.sprite.Sprite):
 
         self.status = 'idle'
 
+    # Получает вид
     def get_view(self, view):
         self.view = view
 
+    # Получает разброс
     def get_shoot(self, shoot):
         self.shoot = shoot
 
+    # Получает тьму карты
     def get_dark(self, dark):
         self.dark = dark
 
+    # Обновляет состояние игрока
     def update(self):
 
         speed = SPEED_PLAYER
@@ -61,6 +65,7 @@ class Player(pygame.sprite.Sprite):
 
         self.move()
 
+    # Перемещает игрока
     def move(self):
         x, y = self.check_collide(self.weapon.collision)
 
@@ -79,6 +84,7 @@ class Player(pygame.sprite.Sprite):
 
         self.weapon.next_frame(self)
 
+    # Проверяет коллизию
     def check_collide(self, circle):
         x = y = 1
         circle.rect.x += self.dx * 2
@@ -93,10 +99,12 @@ class Player(pygame.sprite.Sprite):
         circle.rect.y -= self.dy * 2
         return x, y
 
+    # Изменяет статус/состояние игрока
     def set_status(self, key):
         if self.status == 'idle' or self.status == 'move':
             self.weapon.weapon.set_status(self, key)
 
+    # Меняет снаряжение
     def swich_weapon(self, num):
         if self.status == 'idle' or self.status == 'move':
             x, y = self.check_collide(self.weapon.arr_collision[num])

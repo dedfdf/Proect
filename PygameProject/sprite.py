@@ -13,5 +13,5 @@ collision_circle_group = group()  # коллизии для игрока
 dark_group = group()  # тьма на карте
 object_block_visible_group = group()  # объекты, которые блокируют взгляд игрока
 not_visible_object_group = group()  # объекты которые игрок не может видеть без света
-visible_object_group = group()
-circle_view_group = group()
+visible_object_group = group()  # объекты, которые игрок видит
+view_group = group()  # вид игрока

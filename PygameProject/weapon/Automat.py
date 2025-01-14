@@ -2,7 +2,7 @@ from PygameProject.weapon.All_Weapon import AllWeapon
 import pygame
 from PygameProject.const import VIEW
 
-
+# Игрок с автоматом
 class Automat(AllWeapon):
     name = 'automat'
     arr_status = ['idle', 'attack', 'move', 'reload', 'shoot']

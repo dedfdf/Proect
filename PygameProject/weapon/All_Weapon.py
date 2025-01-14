@@ -2,6 +2,7 @@ from PygameProject.main_funс import get_frame
 import pygame
 
 
+# Класс для смены фреймов всех оружей
 class AllWeapon:
     def __init__(self, arr_status, ):
         self.arr_status = arr_status
@@ -24,6 +25,7 @@ class AllWeapon:
         self.step = 1
         self.time = 0
 
+    # Переходит на следующий фрейм
     def next_frame(self, player, clock, type):
         size_frame = len(self.frames[self.status])
         if clock - self.time > self.speed_frame[self.status]:
@@ -45,6 +47,7 @@ class AllWeapon:
 
             self.image = self.frames[self.status][self.cur_frame]
 
+    # Изменяет статус/состояние игрока
     def set_status(self, player, status):
         if status in self.arr_status:
             self.step = 1

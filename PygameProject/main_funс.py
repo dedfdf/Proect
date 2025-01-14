@@ -6,9 +6,10 @@ import math
 from PIL import Image
 from PygameProject.sprite import object_block_visible_group, not_visible_object_group, \
     visible_object_group
-from PygameProject.const import ANGLE_VIEW, VIEW_CIRCLE
+from PygameProject.const import ANGLE_VIEW
 
 
+# Получает все фреймы
 def get_frame(path, name, status, dx=0, dy=0, attack_dx=0, attack_dy=0):
     path = f'{path}{name}/{status}'
     filenames = [f for f in os.listdir(path) if f.endswith('.png')]
@@ -30,6 +31,7 @@ def get_frame(path, name, status, dx=0, dy=0, attack_dx=0, attack_dy=0):
     return images
 
 
+# Загрузка изображений
 def load_image(name, directory='image'):
     full_name = os.path.join(directory, name)
     if not os.path.isfile(full_name):
@@ -40,6 +42,7 @@ def load_image(name, directory='image'):
     return image
 
 
+# Поворот игрока и его компонентов
 def player_rotate(player):
     mouse_x, mouse_y = pygame.mouse.get_pos()
     rel_x, rel_y = mouse_x - player.rect.centerx, mouse_y - player.rect.centery
@@ -52,6 +55,7 @@ def player_rotate(player):
     player.angle = angle
 
 
+# Изменяет центр на изображении игрока
 def set_image_player(pos):
     im = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
     im_player = Image.open('image/player.png')
@@ -60,6 +64,7 @@ def set_image_player(pos):
     im.save('image/player.png')
 
 
+# Проверяет объекты на отрисовку и строит вид игрока
 def check_visible(player):
     start_angle = (player.angle + ANGLE_VIEW / 2) % 360
     r = player.view.r

@@ -1,8 +1,8 @@
 from PIL import Image, ImageDraw
 import math
-from PygameProject.const import ANGLE_VIEW, VIEW_CIRCLE
 
 
+# Рисует поле для разброса
 def draw_shoot(angel, dis):
     angel = math.radians(angel)
     dx = math.tan(angel) * dis
@@ -26,6 +26,7 @@ def draw_shoot(angel, dis):
     im.save('image/shoot.png')
 
 
+# Ресует коллизию для игрока
 def draw_circle(r, name):
     w = r * 2 + 1
     h = r * 2 + 1
@@ -39,6 +40,7 @@ def draw_circle(r, name):
     return name
 
 
+# Рисует тьму на карте
 def draw_dark(w, h):
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     draw = ImageDraw.Draw(im, 'RGBA')
@@ -48,6 +50,7 @@ def draw_dark(w, h):
     im.save('image/dark.png')
 
 
+# Рисует вид
 def draw_view(arr, r):
     w = h = r * 2 + 1
 

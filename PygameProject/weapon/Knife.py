@@ -2,7 +2,7 @@ from PygameProject.weapon.All_Weapon import AllWeapon
 import pygame
 from PygameProject.const import VIEW
 
-
+# Игрок с ножом
 class Knife(AllWeapon):
     name = 'knife'
     arr_status = ['idle', 'attack', 'move']

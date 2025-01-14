@@ -1,8 +1,8 @@
 import pygame
 from PygameProject.sprite import cursor_group
-from PygameProject.main_funс import load_image
 
 
+# Класс курсора
 class Cursor(pygame.sprite.Sprite):
     def __init__(self, pos, im):
         super().__init__(cursor_group)
@@ -10,5 +10,6 @@ class Cursor(pygame.sprite.Sprite):
         self.image = im
         self.rect = self.image.get_rect(center=pos)
 
+    # Перемещает курсор
     def move(self, pos):
         self.rect.center = pos

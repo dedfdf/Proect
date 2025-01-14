@@ -3,6 +3,7 @@ import pygame
 from PygameProject.const import VIEW
 
 
+# Игрок с пистолетом
 class Pistol(AllWeapon):
     name = 'pistol'
     arr_status = ['idle', 'attack', 'move', 'reload', 'shoot']

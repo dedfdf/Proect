@@ -3,6 +3,7 @@ import pygame
 from PygameProject.const import VIEW_LANTERN
 
 
+# Игрок с фонариком
 class Flashlight(AllWeapon):
     name = 'flashlight'
     arr_status = ['idle', 'attack', 'move']

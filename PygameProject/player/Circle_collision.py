@@ -3,6 +3,7 @@ from PygameProject.sprite import all_sprite, collision_circle_group
 from PygameProject.main_funс import load_image
 
 
+# Коллизия игрока
 class Collision(pygame.sprite.Sprite):
     def __init__(self, name, player):
         super().__init__(collision_circle_group, all_sprite)
@@ -10,5 +11,6 @@ class Collision(pygame.sprite.Sprite):
         self.pos_center = list(player.rect.center)
         self.rect = self.image.get_rect(center=self.pos_center)
 
+    # Перемещает коллизию
     def update(self, vector_move):
         self.rect.center = self.pos_center + vector_move

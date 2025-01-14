@@ -4,6 +4,7 @@ from PygameProject.main_funс import load_image
 from PygameProject.draw import draw_shoot
 
 
+# Класс направления выстрелов
 class Shoot(pygame.sprite.Sprite):
     def __init__(self, player):
         super().__init__(shoot_group, all_sprite)
@@ -12,9 +13,11 @@ class Shoot(pygame.sprite.Sprite):
 
         player.get_shoot(self)
 
+    # Перемещает объект
     def move(self, vector_move):
         self.rect.center = self.pos_center + vector_move
 
+    # Обновляет объект
     def set_view(self, player):
         weapon = player.weapon.weapon
         draw_shoot(weapon.max_angle_shoot, weapon.r_shoot)

@@ -3,6 +3,7 @@ import pygame
 from PygameProject.const import VIEW
 
 
+# Игрок с дробовиком
 class Shotgun(AllWeapon):
     name = 'shotgun'
     arr_status = ['idle', 'attack', 'move', 'reload', 'shoot']

@@ -7,7 +7,7 @@ from PygameProject.weapon.Shotgun import Shotgun
 from PygameProject.weapon.Flashlight import Flashlight
 from PygameProject.player.Weapon import Weapons
 from PygameProject.player.Player import Player
-from PygameProject.player.Circle_view import Circle_view
+from PygameProject.player.View import View
 from PygameProject.player.Shoot import Shoot
 from PygameProject.sprite import *
 from PygameProject.const import TILE_WIDTH, TILE_HEIGHT, FPS
@@ -76,7 +76,7 @@ def main():
 
     Dark(width, height, player)
     weapon.get_collision(player)
-    Circle_view(player)
+    View(player)
     Shoot(player)
 
     camera = Camera(player, width, height)
@@ -125,7 +125,7 @@ def main():
         dark_group.draw(screen)
 
         shoot_group.draw(screen)
-        circle_view_group.draw(screen)
+        view_group.draw(screen)
         bullet_group.draw(screen)
         visible_object_group.draw(screen)
         player_group.draw(screen)
