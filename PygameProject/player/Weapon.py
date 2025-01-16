@@ -1,5 +1,5 @@
-from PygameProject.draw import draw_circle
-from PygameProject.player.Circle_collision import Collision
+from draw import draw_circle
+from player.Circle_collision import Collision
 
 
 # Класс нынешнего оружея игрока

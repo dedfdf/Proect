@@ -3,10 +3,12 @@ class Camera:
     def __init__(self, player, width, height):
         self.dx = 0
         self.dy = 0
+
         self.player = player
         self.shoot = player.shoot
         self.dark = player.dark
         self.view = player.view
+
         self.width, self.height = width, height
 
     # Двигает все обекты на карте

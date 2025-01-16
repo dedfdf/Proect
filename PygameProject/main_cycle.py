@@ -1,20 +1,20 @@
 import pygame
 import sys
-from PygameProject.weapon.Pistol import Pistol
-from PygameProject.weapon.Automat import Automat
-from PygameProject.weapon.Knife import Knife
-from PygameProject.weapon.Shotgun import Shotgun
-from PygameProject.weapon.Flashlight import Flashlight
-from PygameProject.player.Weapon import Weapons
-from PygameProject.player.Player import Player
-from PygameProject.player.View import View
-from PygameProject.player.Shoot import Shoot
-from PygameProject.sprite import *
-from PygameProject.const import TILE_WIDTH, TILE_HEIGHT, FPS
-from PygameProject.main_funс import load_image, player_rotate, check_visible
-from PygameProject.Camera import Camera
-from PygameProject.Cursor import Cursor
-from PygameProject.Dark import Dark
+from weapon.Pistol import Pistol
+from weapon.Automat import Automat
+from weapon.Knife import Knife
+from weapon.Shotgun import Shotgun
+from weapon.Flashlight import Flashlight
+from player.Weapon import Weapons
+from player.Player import Player
+from player.View import View
+from player.Shoot import Shoot
+from sprite import *
+from consts import TILE_WIDTH, TILE_HEIGHT, FPS
+from main_funс import load_image, player_rotate, check_visible
+from Camera import Camera
+from Cursor import Cursor
+from Dark import Dark
 
 pygame.init()
 
@@ -64,7 +64,7 @@ def generate_level(level, weapon):
                 Tile('pl', x, y, wall_group, not_visible_object_group)
             elif level[y][x] == '#':
                 Tile('empty', x, y, grass_group, object_group)
-                new_player = Player(x, y, weapon)
+                new_player = Player(x, y, weapon, width, height)
     return new_player, x, y
 
 
@@ -134,6 +134,8 @@ def main():
         #  ^--может показать коллизию персонажа
 
         cursor_group.draw(screen)
+
+        player.draw_icon(screen)
 
         clock.tick(FPS)
         pygame.display.flip()

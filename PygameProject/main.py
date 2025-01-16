@@ -1,3 +1,3 @@
-from PygameProject.main_cycle import main
+from main_cycle import main
 
 main()

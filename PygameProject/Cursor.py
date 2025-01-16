@@ -1,5 +1,5 @@
 import pygame
-from PygameProject.sprite import cursor_group
+from sprite import cursor_group
 
 
 # Класс курсора

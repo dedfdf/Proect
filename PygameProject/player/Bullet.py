@@ -1,5 +1,5 @@
 import pygame
-from PygameProject.sprite import bullet_group, all_sprite, shoot_group
+from sprite import bullet_group, all_sprite, shoot_group
 
 
 # Класс пуль

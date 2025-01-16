@@ -1,4 +1,4 @@
-from PygameProject.main_funс import get_frame
+from main_funс import get_frame
 import pygame
 
 

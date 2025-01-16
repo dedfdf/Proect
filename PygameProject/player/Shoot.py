@@ -1,7 +1,7 @@
 import pygame
-from PygameProject.sprite import shoot_group, all_sprite
-from PygameProject.main_funс import load_image
-from PygameProject.draw import draw_shoot
+from sprite import shoot_group, all_sprite
+from main_funс import load_image
+from draw import draw_shoot
 
 
 # Класс направления выстрелов

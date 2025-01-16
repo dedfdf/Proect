@@ -4,9 +4,9 @@ import os
 import sys
 import math
 from PIL import Image
-from PygameProject.sprite import object_block_visible_group, not_visible_object_group, \
+from sprite import object_block_visible_group, not_visible_object_group, \
     visible_object_group
-from PygameProject.const import ANGLE_VIEW
+from consts import ANGLE_VIEW
 
 
 # Получает все фреймы

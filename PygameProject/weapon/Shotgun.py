@@ -1,6 +1,6 @@
-from PygameProject.weapon.All_Weapon import AllWeapon
+from weapon.All_Weapon import AllWeapon
 import pygame
-from PygameProject.const import VIEW
+from consts import VIEW, START_PATRON_SHOTGUN, CLIP_PATRON_SHOTGUN
 
 
 # Игрок с дробовиком
@@ -14,6 +14,9 @@ class Shotgun(AllWeapon):
 
     dx, dy = 65, 55
     dx_attack, dy_attack = -10, -28
+
+    patron = START_PATRON_SHOTGUN - CLIP_PATRON_SHOTGUN
+    clip_patron = CLIP_PATRON_SHOTGUN
 
     def __init__(self):
         super().__init__(self.arr_status)

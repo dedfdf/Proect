@@ -1,6 +1,6 @@
-from PygameProject.weapon.All_Weapon import AllWeapon
+from weapon.All_Weapon import AllWeapon
 import pygame
-from PygameProject.const import VIEW
+from consts import VIEW
 
 # Игрок с ножом
 class Knife(AllWeapon):
@@ -10,8 +10,12 @@ class Knife(AllWeapon):
     r_view, r_shoot = VIEW, 50
     min_angle_shoot = 30
     max_angle_shoot = 30
+
     dx, dy = 61, 59
     dx_attack, dy_attack = 0, 0
+
+    patron = 'infinity'
+    clip_patron = 'infinity'
 
     def __init__(self):
         super().__init__(self.arr_status)

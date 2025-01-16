@@ -1,15 +1,18 @@
 import pygame
 from pygame.math import Vector2 as vec2
-from PygameProject.sprite import player_group, all_sprite, wall_group, collision_circle_group
-from PygameProject.const import SPEED_PLAYER, TILE_WIDTH, TILE_HEIGHT
+from sprite import player_group, all_sprite, wall_group, collision_circle_group
+from consts import SPEED_PLAYER, TILE_WIDTH, TILE_HEIGHT, MAX_HEART, MAX_ARMOR
+from main_funс import load_image
 
 
 # Класс игрока
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, weapon):
+    def __init__(self, pos_x, pos_y, weapon, w, h):
         super().__init__(player_group, all_sprite)
         self.image = self.orig_image = weapon.image
         self.weapon = weapon
+
+        self.w, self.h = w, h
 
         self.vector_move = vec2(0)
 
@@ -19,6 +22,11 @@ class Player(pygame.sprite.Sprite):
 
         self.diag_move = 1 / 2 ** 0.5
         self.angle = 0
+
+        self.health = MAX_HEART
+        self.armor = MAX_ARMOR
+
+        self.weapon_icon = 'pistol'
 
         self.status = 'idle'
 
@@ -112,3 +120,34 @@ class Player(pygame.sprite.Sprite):
                 self.weapon.weapon = self.weapon.arr_weapon[num]
                 self.weapon.collision = self.weapon.arr_collision[num]
                 self.shoot.set_view(self)
+
+    def draw_icon(self, screen):
+        image = load_image(f'icon/health_{self.health}.png', 'player')
+        x = self.rect.centerx - self.w / 2 + 35
+        y = self.rect.centery - self.h / 2 + 10 + 25
+        screen.blit(image, (x, y))
+
+        image = load_image('icon/armor.png', 'player')
+        for i in range(self.armor):
+            x = self.rect.centerx - self.w / 2 + 10 * i + 50 * i + 35
+            y = self.rect.centery - self.h / 2 + 95
+            screen.blit(image, (x, y))
+
+        weapon = self.weapon.weapon
+        image = load_image(f'icon/{weapon.name}.png', 'player')
+        x = self.rect.centerx - self.w / 2 + 35
+        y = self.rect.centery + self.h / 2 - 120
+        screen.blit(image, (x, y))
+
+        x = self.rect.centerx - self.w / 2 + 35 + 150
+        y = self.rect.centery + self.h / 2 - 95
+        if weapon.name not in ['knife', 'flashlight']:
+            patron = f'{weapon.clip_patron}/{weapon.patron}'
+
+            font = pygame.font.Font('player/icon/Naziona.otf', 50)
+            text = font.render(f'{patron}', True, 'white')
+            screen.blit(text, (x, y))
+        else:
+            image = load_image('icon/infinity.png', 'player')
+            y -= 30
+            screen.blit(image, (x, y))

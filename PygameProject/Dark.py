@@ -1,7 +1,7 @@
 import pygame
-from PygameProject.sprite import all_sprite, dark_group
-from PygameProject.draw import draw_dark
-from PygameProject.main_funс import load_image
+from sprite import all_sprite, dark_group
+from draw import draw_dark
+from main_funс import load_image
 
 
 # Класс тьмы на карте

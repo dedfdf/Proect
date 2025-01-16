@@ -1,6 +1,6 @@
-from PygameProject.weapon.All_Weapon import AllWeapon
+from weapon.All_Weapon import AllWeapon
 import pygame
-from PygameProject.const import VIEW_LANTERN
+from consts import VIEW_LANTERN
 
 
 # Игрок с фонариком
@@ -14,6 +14,9 @@ class Flashlight(AllWeapon):
 
     dx, dy = 65, 61
     dx_attack, dy_attack = -3, -8
+
+    patron = 'infinity'
+    clip_patron = 'infinity'
 
     def __init__(self):
         super().__init__(self.arr_status)

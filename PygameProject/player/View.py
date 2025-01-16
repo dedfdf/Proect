@@ -1,8 +1,8 @@
 import pygame
-from PygameProject.sprite import all_sprite, view_group
-from PygameProject.const import VIEW
-from PygameProject.draw import draw_view
-from PygameProject.main_funс import load_image
+from sprite import all_sprite, view_group
+from consts import VIEW
+from draw import draw_view
+from main_funс import load_image
 
 
 # Класс вида игрока

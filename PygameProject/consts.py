@@ -8,6 +8,13 @@ START_PATRON_AUTOMAT = 120  # Начальные патроны на автом�
 START_PATRON_SHOTGUN = 30  # Начальные патроны на дробовик
 START_PATRON_PISTOL = 36  # Начальные патроны на пистолет
 
+CLIP_PATRON_AUTOMAT = 30
+CLIP_PATRON_SHOTGUN = 5
+CLIP_PATRON_PISTOL = 12
+
+MAX_HEART = 3
+MAX_ARMOR = 5
+
 TILE_WIDTH = TILE_HEIGHT = 100  # Размер клетки
 
 FPS = 120  # FPS
