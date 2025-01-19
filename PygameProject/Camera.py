@@ -5,7 +5,6 @@ class Camera:
         self.dy = 0
 
         self.player = player
-        self.shoot = player.shoot
         self.dark = player.dark
         self.view = player.view
 
@@ -14,7 +13,7 @@ class Camera:
     # Двигает все обекты на карте
     def apply(self, object):
         if (object is self.player or object is self.dark or object is self.view or
-                object is self.shoot or object in self.player.weapon.arr_collision):
+                object in self.player.weapon.arr_collision):
             object.pos_center[0] += self.dx
             object.pos_center[1] += self.dy
         else:

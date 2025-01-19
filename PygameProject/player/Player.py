@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2 as vec2
 from sprite import player_group, all_sprite, wall_group, collision_circle_group
-from consts import SPEED_PLAYER, TILE_WIDTH, TILE_HEIGHT, MAX_HEART, MAX_ARMOR
+from consts import SPEED_PLAYER, TILE_WIDTH, TILE_HEIGHT, MAX_HEART, MAX_ARMOR, FPS
 from main_funс import load_image
 
 
@@ -29,14 +29,11 @@ class Player(pygame.sprite.Sprite):
         self.weapon_icon = 'pistol'
 
         self.status = 'idle'
+        self.status_move = 0
 
     # Получает вид
     def get_view(self, view):
         self.view = view
-
-    # Получает разброс
-    def get_shoot(self, shoot):
-        self.shoot = shoot
 
     # Получает тьму карты
     def get_dark(self, dark):
@@ -45,10 +42,12 @@ class Player(pygame.sprite.Sprite):
     # Обновляет состояние игрока
     def update(self):
 
-        speed = SPEED_PLAYER
+        speed = SPEED_PLAYER / FPS
+        self.lshift = 0
 
         if pygame.key.get_pressed()[pygame.K_LSHIFT]:
             speed /= 2
+            self.lshift = 1
 
         self.dx = self.dy = 0
 
@@ -66,27 +65,27 @@ class Player(pygame.sprite.Sprite):
         self.image = self.orig_image = self.weapon.image
         self.rect = self.image.get_rect(center=self.rect.center)
 
-        if (self.dx or self.dy) and self.status == 'idle':
-            self.weapon.weapon.set_status(self, 'move')
-        elif self.dx == self.dy == 0 and self.status == 'move':
-            self.weapon.weapon.set_status(self, 'idle')
+        if self.dx or self.dy:
+            self.status_move = 1
+            if self.status == 'idle':
+                self.weapon.weapon.set_status(self, 'move')
+        elif self.dx == self.dy == 0:
+            self.status_move = 0
+            if self.status == 'move':
+                self.weapon.weapon.set_status(self, 'idle')
 
-        self.move()
-
-    # Перемещает игрока
-    def move(self):
         x, y = self.check_collide(self.weapon.collision)
-
         self.dx *= x
         self.dy *= y
 
+    # Перемещает игрока
+    def move(self):
         self.vector_move.x += self.dx
         self.vector_move.y += self.dy
 
         self.rect.center = self.pos_center + self.vector_move
 
         self.view.move(self.vector_move)
-        self.shoot.move(self.vector_move)
         self.dark.move(self.vector_move)
         collision_circle_group.update(self.vector_move)
 
@@ -119,7 +118,7 @@ class Player(pygame.sprite.Sprite):
             if x == y == 1:
                 self.weapon.weapon = self.weapon.arr_weapon[num]
                 self.weapon.collision = self.weapon.arr_collision[num]
-                self.shoot.set_view(self)
+                self.set_status(self.status)
 
     def draw_icon(self, screen):
         image = load_image(f'icon/health_{self.health}.png', 'player')
@@ -151,3 +150,10 @@ class Player(pygame.sprite.Sprite):
             image = load_image('icon/infinity.png', 'player')
             y -= 30
             screen.blit(image, (x, y))
+
+    def remove_health(self):
+        if self.armor != 0:
+            self.armor -= 1
+        else:
+            if self.health != 0:
+                self.health -= 1

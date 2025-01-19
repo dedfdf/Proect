@@ -12,10 +12,13 @@ from consts import ANGLE_VIEW
 # Получает все фреймы
 def get_frame(path, name, status, dx=0, dy=0, attack_dx=0, attack_dy=0):
     path = f'{path}{name}/{status}'
-    filenames = [f for f in os.listdir(path) if f.endswith('.png')]
+
+    filenames = [(f, int(f.split('.')[0].split('_')[-1])) for f in os.listdir(path)]
+    filenames = sorted(filenames, key=lambda x: x[1])
+
     images = []
     rate_x = rate_y = 0
-    for name in filenames:
+    for name, num in filenames:
         if path.split('/')[-1] == 'attack':
             rate_x = attack_dx
             rate_y = attack_dy
@@ -47,9 +50,8 @@ def player_rotate(player):
     mouse_x, mouse_y = pygame.mouse.get_pos()
     rel_x, rel_y = mouse_x - player.rect.centerx, mouse_y - player.rect.centery
     angle = (180 / math.pi) * -math.atan2(rel_y, rel_x)
-    for sprite in [player, player.shoot]:
-        sprite.image = pygame.transform.rotate(sprite.orig_image, int(angle))
-        sprite.rect = sprite.image.get_rect(center=sprite.rect.center)
+    player.image = pygame.transform.rotate(player.orig_image, int(angle))
+    player.rect = player.image.get_rect(center=player.rect.center)
     if angle < 0:
         angle = 360 + angle
     player.angle = angle
@@ -64,8 +66,8 @@ def set_image_player(pos):
     im.save('image/player.png')
 
 
-# Проверяет объекты на отрисовку и строит вид игрока
-def check_visible(player):
+# Строит вид игрока
+def create_visible(player):
     start_angle = (player.angle + ANGLE_VIEW / 2) % 360
     r = player.view.r
     vec_arr = []
@@ -93,8 +95,13 @@ def check_visible(player):
                     vec = vec_1 if s1 <= s2 else vec_2
                     s = min(s1, s2)
 
-        vec_arr.append(vec)
+        vec_arr.append((vec))
     player.view.set_view(player, vec_arr)
+
+
+# Проверяет объекты на отрисовку
+def check_visible(player):
+    start_angle = (player.angle + ANGLE_VIEW / 2) % 360
 
     for object in not_visible_object_group:
         vec = vec2(object.rect.centerx - player.rect.centerx,

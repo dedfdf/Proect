@@ -9,14 +9,21 @@ class Flashlight(AllWeapon):
     arr_status = ['idle', 'attack', 'move']
     radius = 20
     r_view, r_shoot = VIEW_LANTERN, 50
-    min_angle_shoot = 30
-    max_angle_shoot = 30
+
+    idle_angle_shoot = 30
+    walk_angle_shoot = 30
+    run_angle_shoot = 30
 
     dx, dy = 65, 61
     dx_attack, dy_attack = -3, -8
 
     patron = 'infinity'
     clip_patron = 'infinity'
+    max_clip_patron = clip_patron
+
+    speed_frame = {'attack': 50,
+                   'reload': 80,
+                   'shoot': 60}
 
     def __init__(self):
         super().__init__(self.arr_status)

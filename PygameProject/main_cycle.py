@@ -8,10 +8,9 @@ from weapon.Flashlight import Flashlight
 from player.Weapon import Weapons
 from player.Player import Player
 from player.View import View
-from player.Shoot import Shoot
 from sprite import *
 from consts import TILE_WIDTH, TILE_HEIGHT, FPS
-from main_funс import load_image, player_rotate, check_visible
+from main_funс import load_image, player_rotate, check_visible, create_visible
 from Camera import Camera
 from Cursor import Cursor
 from Dark import Dark
@@ -77,7 +76,6 @@ def main():
     Dark(width, height, player)
     weapon.get_collision(player)
     View(player)
-    Shoot(player)
 
     camera = Camera(player, width, height)
     cursor = Cursor(pygame.mouse.get_pos(), cursor_image)
@@ -110,9 +108,12 @@ def main():
                     player.set_status('attack')
                 else:
                     player.set_status('shoot')
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_v:
+                player.remove_health()
 
         screen.fill('black')
 
+        create_visible(player)
         check_visible(player)
         player_group.update()
         player_rotate(player)
@@ -120,12 +121,13 @@ def main():
         camera.update(player)
         for sprite in all_sprite:
             camera.apply(sprite)
+        player.move()
 
         object_group.draw(screen)
         dark_group.draw(screen)
 
-        shoot_group.draw(screen)
         view_group.draw(screen)
+        bullet_group.update()
         bullet_group.draw(screen)
         visible_object_group.draw(screen)
         player_group.draw(screen)
