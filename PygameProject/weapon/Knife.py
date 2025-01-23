@@ -2,6 +2,7 @@ from weapon.All_Weapon import AllWeapon
 import pygame
 from consts import VIEW
 
+
 # Игрок с ножом
 class Knife(AllWeapon):
     name = 'knife'
@@ -13,16 +14,15 @@ class Knife(AllWeapon):
     walk_angle_shoot = 30
     run_angle_shoot = 30
 
+    speed_set_angle = 10
+    speed_aim_angle = 10
+
     dx, dy = 61, 59
     dx_attack, dy_attack = 0, 0
 
     patron = 'infinity'
     clip_patron = 'infinity'
     max_clip_patron = clip_patron
-
-    speed_frame = {'attack': 50,
-                   'reload': 80,
-                   'shoot': 60}
 
     def __init__(self):
         super().__init__(self.arr_status)

@@ -10,20 +10,24 @@ class Automat(AllWeapon):
     radius = 20
     r_view, r_shoot = VIEW, 550
 
-    idle_angle_shoot = 10
+    idle_angle_shoot = 2
     walk_angle_shoot = 20
-    run_angle_shoot = 40
+    run_angle_shoot = 60
+
+    speed_set_angle = 60
+    speed_aim_angle = 6
 
     dx, dy = 65, 55
-    dx_attack, dy_attack = -10, -28
+    dx_attack, dy_attack = -7, -29
 
     patron = START_PATRON_AUTOMAT - CLIP_PATRON_AUTOMAT
     clip_patron = CLIP_PATRON_AUTOMAT
     max_clip_patron = clip_patron
 
-    speed_frame = {'attack': 50,
-                   'reload': 60,
-                   'shoot': 60}
+    pygame.mixer.init()
+    pygame.mixer.set_num_channels(150)
+    shoot_sound = pygame.mixer.Sound(f'sound/{name}_shoot.mp3')
+    reload_sound = pygame.mixer.Sound(f'sound/{name}_reload.mp3')
 
     def __init__(self):
         super().__init__(self.arr_status)

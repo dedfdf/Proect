@@ -15,20 +15,14 @@ class Bullet(pygame.sprite.Sprite):
         im = load_image('bullet.png')
         self.player = player
 
-        weapon = player.weapon.weapon
-        angle = weapon.idle_angle_shoot
-        if player.status_move:
-            angle = weapon.run_angle_shoot
-            if player.lshift:
-                angle = weapon.walk_angle_shoot
-        start_angle = (player.angle - angle / 2) % 360
-        angle = uniform(start_angle, start_angle + angle)
+        start_angle = (player.angle - player.angle_shoot / 2) % 360
+        angle = uniform(start_angle, start_angle + player.angle_shoot)
 
         self.image = pygame.transform.rotate(im, angle)
         self.rect = self.image.get_rect(center=player.rect.center)
 
         angle = math.radians(angle)
-        speed = BULLET_SPEED / FPS
+        speed = BULLET_SPEED * player.dt
         x = speed * math.cos(angle)
         y = -speed * math.sin(angle)
 

@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw
 import math
+from consts import R_LOAD_CIRCLE
 
 
 # Рисует поле для разброса
@@ -60,7 +61,18 @@ def draw_view(arr, r):
     x0 = w // 2
     y0 = h // 2
 
-    for vec in arr:
+    for en, vec in enumerate(arr):
         draw.line((x0, y0, x0 + vec.x, y0 - vec.y), fill=(255, 255, 255, 80))
 
     im.save('image/circle_view.png')
+
+
+def draw_load_circle(color, color_border, e_angle):
+    w = h = R_LOAD_CIRCLE
+
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(im, 'RGBA')
+
+    draw.pieslice((0, 0, w, h), 270, e_angle, fill=color, outline=color_border, width=3)
+
+    im.save('image/load_circle.png')

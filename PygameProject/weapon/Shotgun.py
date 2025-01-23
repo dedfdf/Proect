@@ -10,20 +10,23 @@ class Shotgun(AllWeapon):
     radius = 20
     r_view, r_shoot = VIEW, 250
 
-    idle_angle_shoot = 25
-    walk_angle_shoot = 35
+    idle_angle_shoot = 30
+    walk_angle_shoot = 40
     run_angle_shoot = 60
 
+    speed_set_angle = 60
+    speed_aim_angle = 1
+
     dx, dy = 65, 55
-    dx_attack, dy_attack = -10, -28
+    dx_attack, dy_attack = -7, -29
 
     patron = START_PATRON_SHOTGUN - CLIP_PATRON_SHOTGUN
     clip_patron = CLIP_PATRON_SHOTGUN
     max_clip_patron = clip_patron
 
-    speed_frame = {'attack': 50,
-                   'reload': 60,
-                   'shoot': 100}
+    pygame.mixer.init()
+    shoot_sound = pygame.mixer.Sound(f'sound/{name}_shoot.mp3')
+    reload_sound = pygame.mixer.Sound(f'sound/{name}_reload.mp3')
 
     def __init__(self):
         super().__init__(self.arr_status)

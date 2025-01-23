@@ -1,6 +1,7 @@
 from main_funс import get_frame
 import pygame
 from player.Bullet import Bullet
+from consts import FPS
 
 
 # Класс для смены фреймов всех оружей
@@ -20,14 +21,13 @@ class AllWeapon:
         self.step = 1
         self.time = 0
 
-        self.speed_frame['idle'] = 70
-        self.speed_frame['move'] = 50
-
     # Переходит на следующий фрейм
     def next_frame(self, player, clock, type):
         size_frame = len(self.frames[self.status])
-        if clock - self.time > self.speed_frame[self.status]:
-            self.time = clock
+        # время между анимациями берем как FPS / время 1-ого прохода по циклу и превращаем в секунды
+        # и умноженный на количество кадров
+        if self.time >= 1 / 100:
+            self.time = 0
 
             if 2 > self.cur_frame + self.step:
                 self.step = 1
@@ -47,21 +47,34 @@ class AllWeapon:
 
             self.cur_frame = self.cur_frame + self.step
 
-            if self.status == 'shoot' and self.cur_frame == 1:
-                if type == 2:
-                    for _ in range(5):
+            if self.status == 'shoot':
+                if self.cur_frame == 1:
+                    if type == 2:
+                        for _ in range(5):
+                            Bullet(player)
+                    else:
+                        if type == 1:
+                            self.shoot_sound.play(0)
                         Bullet(player)
-                else:
-                    Bullet(player)
-                self.clip_patron = max(0, self.clip_patron - 1)
+                    player.angle_shoot = min(self.run_angle_shoot,
+                                             player.angle_shoot + self.speed_set_angle)
+                    self.clip_patron = max(0, self.clip_patron - 1)
 
-            if self.status == 'reload' and self.cur_frame == size_frame - 1:
-                patron = self.max_clip_patron - self.clip_patron
-                patron = min(patron, self.patron)
-                self.clip_patron += patron
-                self.patron -= patron
-            # print(self.status, self.cur_frame)
+                elif self.cur_frame == 0 and type != 1:
+                    self.shoot_sound.play(0)
+
+            if self.status == 'reload':
+                if self.cur_frame == size_frame - 1:
+                    patron = self.max_clip_patron - self.clip_patron
+                    patron = min(patron, self.patron)
+                    self.clip_patron += patron
+                    self.patron -= patron
+                elif self.cur_frame == 0:
+                    self.reload_sound.play(0)
+
             self.image = self.frames[self.status][self.cur_frame]
+        else:
+            self.time += player.dt
 
     # Изменяет статус/состояние игрока
     def set_status(self, player, status):
@@ -74,4 +87,5 @@ class AllWeapon:
             self.step = 1
             self.status = status
             self.cur_frame = -1
+            self.time = 0
             player.status = status

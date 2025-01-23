@@ -1,12 +1,14 @@
-import pygame
-from pygame.math import Vector2 as vec2
+import math
 import os
 import sys
-import math
+
+import pygame
 from PIL import Image
-from sprite import object_block_visible_group, not_visible_object_group, \
-    visible_object_group
+from pygame.math import Vector2 as vec2
+
 from consts import ANGLE_VIEW
+from sprite import object_block_visible_group, not_visible_object_group, \
+    visible_object_group, items_visible_object_groups, items_group
 
 
 # Получает все фреймы
@@ -95,7 +97,7 @@ def create_visible(player):
                     vec = vec_1 if s1 <= s2 else vec_2
                     s = min(s1, s2)
 
-        vec_arr.append((vec))
+        vec_arr.append(vec)
     player.view.set_view(player, vec_arr)
 
 
@@ -107,7 +109,14 @@ def check_visible(player):
         vec = vec2(object.rect.centerx - player.rect.centerx,
                    object.rect.centery - player.rect.centery)
         s = (vec.x ** 2 + vec.y ** 2) ** 0.5
-        angle = math.degrees(math.acos(vec.x / s))
+        if s != 0:
+            angle = math.degrees(math.acos(vec.x / s))
+        else:
+            if object in items_group:
+                items_visible_object_groups.add(object)
+            else:
+                visible_object_group.add(object)
+            continue
         if object.rect.centery > player.rect.centery:
             angle = 360 - angle
 
@@ -120,14 +129,21 @@ def check_visible(player):
             if not (start_angle >= angle or angle >= (start_angle - ANGLE_VIEW) % 360):
                 continue
 
-        flag = 0
-        for sprite in object_block_visible_group:
-            rect = sprite.rect
-            p_x, p_y = player.rect.center
-            o_x, o_y = object.rect.center
-            if rect.clipline(p_x, p_y, o_x, o_y):
-                flag = 1
-                break
+        flag = check_barrier(player, object, object_block_visible_group)
         if flag:
             continue
-        visible_object_group.add(object)
+        if object in items_group:
+            items_visible_object_groups.add(object)
+        else:
+            visible_object_group.add(object)
+
+
+def check_barrier(object_one, object_two, group):
+    p_x, p_y = object_one.rect.center
+    o_x, o_y = object_two.rect.center
+
+    for sprite in group:
+        rect = sprite.rect
+        if rect.clipline(p_x, p_y, o_x, o_y):
+            return True
+    return False
