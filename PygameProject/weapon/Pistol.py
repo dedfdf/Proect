@@ -1,10 +1,10 @@
-from weapon.All_Weapon import AllWeapon
+from weapon.Frames import Frames
 import pygame
 from consts import VIEW, START_PATRON_PISTOL, CLIP_PATRON_PISTOL
 
 
 # Игрок с пистолетом
-class Pistol(AllWeapon):
+class Pistol(Frames):
     name = 'pistol'
     arr_status = ['idle', 'attack', 'move', 'reload', 'shoot']
     radius = 20
@@ -24,7 +24,6 @@ class Pistol(AllWeapon):
     clip_patron = CLIP_PATRON_PISTOL
     max_clip_patron = clip_patron
 
-    pygame.mixer.init()
     shoot_sound = pygame.mixer.Sound(f'sound/{name}_shoot.mp3')
     reload_sound = pygame.mixer.Sound(f'sound/{name}_reload.mp3')
 
@@ -33,7 +32,7 @@ class Pistol(AllWeapon):
 
     def next_frame(self, player):
         clock = pygame.time.get_ticks()
-        super().next_frame(player, clock, 0)
+        super().next_frame(player, clock, 3)
 
     def set_status(self, player, status):
         super().set_status(player, status)

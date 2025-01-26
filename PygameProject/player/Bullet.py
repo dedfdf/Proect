@@ -19,10 +19,11 @@ class Bullet(pygame.sprite.Sprite):
         angle = uniform(start_angle, start_angle + player.angle_shoot)
 
         self.image = pygame.transform.rotate(im, angle)
-        self.rect = self.image.get_rect(center=player.rect.center)
+        self.pos_center = list(player.rect.center)
+        self.rect = self.image.get_rect(center=self.pos_center)
 
         angle = math.radians(angle)
-        speed = BULLET_SPEED * player.dt
+        speed = BULLET_SPEED * player.dt * FPS
         x = speed * math.cos(angle)
         y = -speed * math.sin(angle)
 
@@ -43,11 +44,14 @@ class Bullet(pygame.sprite.Sprite):
             return 2
         return 0
 
-    def update(self):
+    def new_pos(self):
         flag = self.check()
         if flag == 1:
             self.kill()
         if flag == 2:
             self.kill()
         else:
-            self.rect.center += self.vec_speed
+            self.pos_center += self.vec_speed
+
+    def update(self, vector_move):
+        self.rect.center = self.pos_center

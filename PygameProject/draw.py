@@ -3,30 +3,6 @@ import math
 from consts import R_LOAD_CIRCLE
 
 
-# Рисует поле для разброса
-def draw_shoot(angel, dis):
-    angel = math.radians(angel)
-    dx = math.tan(angel) * dis
-
-    size = dis + dis / 3
-    w = h = (int(size) + 1) * 2
-
-    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(im, 'RGBA')
-
-    x = w / 2
-    y = h / 2
-
-    draw.ellipse([x - dx, y - dis - dis / 3, x + dx, y - dis + dis / 3],
-                 fill=(255, 0, 0, 50), outline=None)
-    draw.rectangle((x - dx, y - dis, x + dx, y - dis + dis / 3), fill=(0, 0, 0, 0))
-    draw.polygon([x, y, x - dx, y - dis, x + dx, y - dis], fill=(255, 0, 0, 50),
-                 outline=None)
-
-    im = im.rotate(-90)
-    im.save('image/shoot.png')
-
-
 # Ресует коллизию для игрока
 def draw_circle(r, name):
     w = r * 2 + 1
@@ -42,11 +18,15 @@ def draw_circle(r, name):
 
 
 # Рисует тьму на карте
-def draw_dark(w, h):
+def draw_dark(w, h, r):
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     draw = ImageDraw.Draw(im, 'RGBA')
 
+    x0 = w // 2
+    y0 = h // 2
+
     draw.rectangle((0, 0, w, h), fill=(0, 0, 0, 128))
+    draw.rectangle((x0 - r, y0 - r, x0 + r, y0 + r), fill=(0, 0, 0, 0))
 
     im.save('image/dark.png')
 
@@ -61,10 +41,12 @@ def draw_view(arr, r):
     x0 = w // 2
     y0 = h // 2
 
-    for en, vec in enumerate(arr):
-        draw.line((x0, y0, x0 + vec.x, y0 - vec.y), fill=(255, 255, 255, 80))
+    draw.rectangle((0, 0, w, h), fill=(0, 0, 0, 128))
 
-    im.save('image/circle_view.png')
+    for en, vec in enumerate(arr):
+        draw.line((x0, y0, x0 + vec.x, y0 - vec.y), fill=(0, 0, 0, 0))
+
+    im.save('image/view.png')
 
 
 def draw_load_circle(color, color_border, e_angle):

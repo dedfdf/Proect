@@ -1,10 +1,10 @@
-from weapon.All_Weapon import AllWeapon
+from weapon.Frames import Frames
 import pygame
 from consts import VIEW_LANTERN
 
 
 # Игрок с фонариком
-class Flashlight(AllWeapon):
+class Flashlight(Frames):
     name = 'flashlight'
     arr_status = ['idle', 'attack', 'move']
     radius = 20

@@ -1,10 +1,10 @@
-from weapon.All_Weapon import AllWeapon
+from weapon.Frames import Frames
 import pygame
 from consts import VIEW
 
 
 # Игрок с ножом
-class Knife(AllWeapon):
+class Knife(Frames):
     name = 'knife'
     arr_status = ['idle', 'attack', 'move']
     radius = 20

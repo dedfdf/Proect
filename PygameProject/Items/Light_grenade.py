@@ -23,7 +23,11 @@ class LightGrenade(pygame.sprite.Sprite):
     def __init__(self, player, type=0):
         super().__init__(not_visible_object_group, items_group, all_sprite)
         self.image = load_image(f'icon/light_grenade.png', 'items')
-        self.rect = self.image.get_rect(center=player.rect.center)
+        self.pos_center = list(player.rect.center)
+        self.rect = self.image.get_rect(center=self.pos_center)
+
+        self.sound_boom = pygame.mixer.Sound('sound/light_grenade_boom.mp3')
+        self.sound_conflict = pygame.mixer.Sound('sound/light_grenade_conflict.mp3')
 
         if type:
             self.a = -SPEEDUP_GRENADE
@@ -42,6 +46,8 @@ class LightGrenade(pygame.sprite.Sprite):
     def fly(self, player):
         v = (self.v + self.a * self.time) * player.dt
         self.time += player.dt
+
+        self.sound_conflict.set_volume(player.volume)
 
         if not self.time_stop:
             angle = math.radians(self.angle)
@@ -62,8 +68,7 @@ class LightGrenade(pygame.sprite.Sprite):
                         self.vec_x_y[0] *= -1
                         flag_x = 0
 
-            self.rect.centerx -= vec.x
-            self.rect.centery += vec.y
+            self.pos_center += vec
 
             for group in arr_spriteGroup:
                 for sprite in group:
@@ -77,7 +82,12 @@ class LightGrenade(pygame.sprite.Sprite):
             if not flag_y:
                 self.rect.centery -= vec.y
 
+            if not flag_x or not flag_y:
+                self.sound_conflict.play(0)
+
         if v <= 0:
+            if self.time_stop == 0:
+                self.sound_conflict.play(0)
             self.time_stop += player.dt
         if self.time_stop >= TIME_STOP_GRENADE:
             self.boom(player)
@@ -85,3 +95,6 @@ class LightGrenade(pygame.sprite.Sprite):
     def boom(self, player):
         player.blind(self)
         self.kill()
+
+    def update(self, vector_move):
+        self.rect.center = self.pos_center

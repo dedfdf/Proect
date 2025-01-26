@@ -23,7 +23,11 @@ class Medicine(pygame.sprite.Sprite):
     def __init__(self, player):
         super().__init__(not_visible_object_group, items_group, all_sprite)
         self.image = load_image(f'icon/medicine.png', 'items')
-        self.rect = self.image.get_rect(center=player.rect.center)
+        self.pos_center = list(player.rect.center)
+        self.rect = self.image.get_rect(center=self.pos_center)
 
     def pick_up(self):
         return MedicineIcon()
+
+    def update(self, vector_move):
+        self.rect.center = self.pos_center

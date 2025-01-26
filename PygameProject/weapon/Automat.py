@@ -1,10 +1,10 @@
-from weapon.All_Weapon import AllWeapon
+from weapon.Frames import Frames
 import pygame
 from consts import VIEW, START_PATRON_AUTOMAT, CLIP_PATRON_AUTOMAT
 
 
 # Игрок с автоматом
-class Automat(AllWeapon):
+class Automat(Frames):
     name = 'automat'
     arr_status = ['idle', 'attack', 'move', 'reload', 'shoot']
     radius = 20
@@ -24,8 +24,6 @@ class Automat(AllWeapon):
     clip_patron = CLIP_PATRON_AUTOMAT
     max_clip_patron = clip_patron
 
-    pygame.mixer.init()
-    pygame.mixer.set_num_channels(150)
     shoot_sound = pygame.mixer.Sound(f'sound/{name}_shoot.mp3')
     reload_sound = pygame.mixer.Sound(f'sound/{name}_reload.mp3')
 

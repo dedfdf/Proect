@@ -51,8 +51,10 @@ class Player(pygame.sprite.Sprite):
         self.using_item = None
 
         self.blind_effect = 0
-
         self.timer_loading = 0
+        self.volume = 1
+
+        self.sound_step = pygame.mixer.Sound('sound/step.mp3')
 
     # Получает вид
     def get_view(self, view):
@@ -78,11 +80,11 @@ class Player(pygame.sprite.Sprite):
             self.angle_shoot = max(weapon.idle_angle_shoot, self.angle_shoot - speed)
 
     # Обновляет состояние игрока
-    def update(self, dt):
+    def update_move(self, dt):
 
         self.dt = dt
 
-        speed = SPEED_PLAYER * dt
+        speed = SPEED_PLAYER * dt * FPS
         self.lshift = 0
 
         if pygame.key.get_pressed()[pygame.K_LSHIFT]:
@@ -127,9 +129,7 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.center = self.pos_center + self.vector_move
 
-        self.view.move(self.vector_move)
-        self.dark.move(self.vector_move)
-        collision_circle_group.update(self.vector_move)
+        all_sprite.update(self.vector_move)
 
         self.weapon.next_frame(self)
 
@@ -162,6 +162,7 @@ class Player(pygame.sprite.Sprite):
                 self.weapon.collision = self.weapon.arr_collision[num]
                 self.set_status(self.status)
                 self.angle_shoot = self.weapon.weapon.run_angle_shoot
+                self.dark.set_dark(self.weapon.weapon.r_view)
 
     def draw_icon(self, screen):
         image = load_image(f'icon/health_{self.health}.png', 'player')
@@ -251,13 +252,16 @@ class Player(pygame.sprite.Sprite):
                     break
 
     def blind(self, grenade):
-        if check_barrier(self, grenade, object_block_visible_group):
-            return
-
         vec = vec2(self.rect.centerx - grenade.rect.centerx,
                    (self.rect.centery - grenade.rect.centery))
         s = (vec.x ** 2 + vec.y ** 2) ** 0.5
         view = self.weapon.weapon.r_view
+
+        if s <= view * 2:
+            grenade.sound_boom.play(0)
+
+        if check_barrier(self, grenade, object_block_visible_group):
+            return
 
         blind = MAX_BLIND_GRENADE
         time = TIME_MAX_BLIND
@@ -279,5 +283,27 @@ class Player(pygame.sprite.Sprite):
         blind = blind / 100 * percent
         time = time / 100 * percent
 
+        sound = pygame.mixer.Sound('sound/light_grenade_concussion.mp3')
+        raw_array = sound.get_raw()
+        max_raw = len(raw_array)
+        begin = round(max_raw - max_raw / 100 * percent)
+        begin -= begin % 4
+
+        raw_array = raw_array[begin:]
+        cut_sound = pygame.mixer.Sound(buffer=raw_array)
+        cut_sound.play(0)
+
         self.blind_effect = max(blind, 0)
         self.v_blind = blind / time * self.dt
+        self.volume = 1 - 1 / 100 * percent
+
+    def draw_blind(self, screen):
+        surface = pygame.Surface((self.w, self.h), pygame.SRCALPHA)
+        surface.fill((255, 255, 255, min(self.blind_effect, 255)))
+        screen.blit(surface, (0, 0))
+
+        self.blind_effect -= self.v_blind
+        self.blind_effect = max(0, self.blind_effect)
+
+        percent = self.blind_effect / (MAX_BLIND_GRENADE / 100)
+        self.volume = 1 - 1 / 100 * percent

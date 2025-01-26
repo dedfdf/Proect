@@ -1,5 +1,5 @@
 from draw import draw_load_circle
-from consts import TIME_LOADING
+from consts import TIME_LOADING, FPS
 
 
 class Load_circle:

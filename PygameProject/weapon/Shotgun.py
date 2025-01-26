@@ -1,14 +1,14 @@
-from weapon.All_Weapon import AllWeapon
+from weapon.Frames import Frames
 import pygame
 from consts import VIEW, START_PATRON_SHOTGUN, CLIP_PATRON_SHOTGUN
 
 
 # Игрок с дробовиком
-class Shotgun(AllWeapon):
+class Shotgun(Frames):
     name = 'shotgun'
     arr_status = ['idle', 'attack', 'move', 'reload', 'shoot']
     radius = 20
-    r_view, r_shoot = VIEW, 250
+    r_view, r_shoot = VIEW, 300
 
     idle_angle_shoot = 30
     walk_angle_shoot = 40
@@ -24,7 +24,6 @@ class Shotgun(AllWeapon):
     clip_patron = CLIP_PATRON_SHOTGUN
     max_clip_patron = clip_patron
 
-    pygame.mixer.init()
     shoot_sound = pygame.mixer.Sound(f'sound/{name}_shoot.mp3')
     reload_sound = pygame.mixer.Sound(f'sound/{name}_reload.mp3')
 

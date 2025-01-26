@@ -1,14 +1,14 @@
-FPS = 120  # FPS
+FPS = 60  # FPS
 
 VIEW = 425  # Радиус для сектора видимости игрока
 VIEW_LANTERN = 500  # Радиус для сектора видимости игрока c фонариком
 ANGLE_VIEW = 100  # Угол обзора игрока
 
-SPEED_PLAYER = 130  # Скорость игрока
-BULLET_SPEED = 3000
+SPEED_PLAYER = 2  # Скорость игрока
+BULLET_SPEED = 50
 TIME_LOADING = 4
 
-SPEEDUP_GRENADE = 250
+SPEEDUP_GRENADE = 400
 DISTANCE = 400
 TIME_STOP_GRENADE = 0.5
 
