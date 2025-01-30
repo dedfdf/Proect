@@ -1,4 +1,4 @@
-from main_funс import load_image
+from image_scale import medicine_icon, medicine
 from player.Load_circle import Load_circle
 from consts import MEDICINE_COLOR_LOAD_CIRCLE, MEDICINE_COLOR_BORDER_LOAD_CIRCLE, MAX_HEART
 import pygame
@@ -7,7 +7,7 @@ from sprite import not_visible_object_group, all_sprite, items_group
 
 class MedicineIcon:
     def __init__(self):
-        self.image = load_image(f'icon/medicine_icon.png', 'items')
+        self.image = medicine_icon
 
     def load(self, player):
         if player.health != MAX_HEART:
@@ -22,7 +22,7 @@ class MedicineIcon:
 class Medicine(pygame.sprite.Sprite):
     def __init__(self, player):
         super().__init__(not_visible_object_group, items_group, all_sprite)
-        self.image = load_image(f'icon/medicine.png', 'items')
+        self.image = medicine
         self.pos_center = list(player.rect.center)
         self.rect = self.image.get_rect(center=self.pos_center)
 

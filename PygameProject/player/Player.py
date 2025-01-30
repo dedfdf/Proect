@@ -2,14 +2,15 @@ import pygame
 from pygame.math import Vector2 as vec2
 from sprite import player_group, all_sprite, wall_group, collision_circle_group, items_group, \
     object_block_visible_group
-from consts import SPEED_PLAYER, TILE_WIDTH, TILE_HEIGHT, MAX_HEART, MAX_ARMOR, FPS, \
-    TIME_MAX_BLIND, MAX_BLIND_GRENADE, ANGLE_VIEW
-from main_funс import load_image, check_barrier
+from consts import SPEED_PLAYER, TILE_WIDTH, TILE_HEIGHT, MAX_HEART, MAX_ARMOR, MOVE_FPS, \
+    TIME_MAX_BLIND, MAX_BLIND_GRENADE, ANGLE_VIEW, PERCENT_SCALE
+from main_func import load_image, check_barrier
 from items.Armor import ArmorIcon, Armor
 from items.Light_grenade import LightGrenadeIcon, LightGrenade
 from items.Medicine import MedicineIcon, Medicine
 from items.Patron import PatronIcon, Patron
 import math
+from image_scale import armor_icon, dict_weapons_icon, infinity, dict_health, armor_big_icon
 
 ITEMS_PAIR = ((ArmorIcon, Armor), (MedicineIcon, Medicine), (PatronIcon, Patron),
               (LightGrenadeIcon, LightGrenade))
@@ -55,6 +56,7 @@ class Player(pygame.sprite.Sprite):
         self.volume = 1
 
         self.sound_step = pygame.mixer.Sound('sound/step.mp3')
+        self.sound_pick_up = pygame.mixer.Sound('sound/pick_up.mp3')
 
     # Получает вид
     def get_view(self, view):
@@ -84,7 +86,7 @@ class Player(pygame.sprite.Sprite):
 
         self.dt = dt
 
-        speed = SPEED_PLAYER * dt * FPS
+        speed = SPEED_PLAYER * dt * MOVE_FPS
         self.lshift = 0
 
         if pygame.key.get_pressed()[pygame.K_LSHIFT]:
@@ -164,48 +166,56 @@ class Player(pygame.sprite.Sprite):
                 self.angle_shoot = self.weapon.weapon.run_angle_shoot
                 self.dark.set_dark(self.weapon.weapon.r_view)
 
+    # отрисовывает интерфейс игрока
     def draw_icon(self, screen):
-        image = load_image(f'icon/health_{self.health}.png', 'player')
-        x = self.rect.centerx - self.w / 2 + 35
-        y = self.rect.centery - self.h / 2 + 10 + 25
-        screen.blit(image, (x, y))
+        s_border = 50 * PERCENT_SCALE
 
-        image = load_image('icon/armor.png', 'player')
+        image_health = dict_health[self.health]
+        x = self.rect.centerx - self.w / 2 + s_border
+        y = self.rect.centery - self.h / 2 + s_border
+        screen.blit(image_health, (x, y))
+
+        image = armor_big_icon
         for i in range(self.armor):
-            x = self.rect.centerx - self.w / 2 + 10 * i + 50 * i + 35
-            y = self.rect.centery - self.h / 2 + 95
+            x = self.rect.centerx - self.w / 2 + s_border * (i + 1) + image.width / 2 * i
+            y = self.rect.centery - self.h / 2 + image_health.height + s_border + image.height / 2
             screen.blit(image, (x, y))
 
         weapon = self.weapon.weapon
-        image = load_image(f'icon/{weapon.name}.png', 'player')
-        x = self.rect.centerx - self.w / 2 + 35
-        y = self.rect.centery + self.h / 2 - 120
+        image = dict_weapons_icon[weapon.name]
+        x = self.rect.centerx - self.w / 2 + s_border
+        y = self.rect.centery + self.h / 2 - image.height - s_border
         screen.blit(image, (x, y))
 
-        x = self.rect.centerx - self.w / 2 + 35 + 150
-        y = self.rect.centery + self.h / 2 - 95
+        size = 60 * PERCENT_SCALE
+        x = self.rect.centerx - self.w / 2 + image.width + s_border + size
+        y = self.rect.centery + self.h / 2 - s_border * 2 - size / 2
+
         if weapon.name not in ['knife', 'flashlight']:
             patron = f'{weapon.clip_patron}/{weapon.patron}'
 
-            font = pygame.font.Font('player/icon/Naziona.otf', 50)
+            font = pygame.font.Font('player/icon/Naziona.otf', round(size))
             text = font.render(f'{patron}', True, 'white')
             screen.blit(text, (x, y))
         else:
-            image = load_image('icon/infinity.png', 'player')
-            screen.blit(image, (x, y - 30))
+            image = infinity
+            screen.blit(image, (x, y - image.height / 4))
 
-        x = self.rect.centerx + self.w / 2 - 125
-        y = self.rect.centery + self.h / 2 - 125
+        size = 75 * PERCENT_SCALE
+        x = self.rect.centerx + self.w / 2 - s_border - size
+        y = self.rect.centery + self.h / 2 - size - s_border
+
         for i in range(4, -1, -1):
             color = (100, 100, 100)
             if i == self.select_cell:
                 color = (40, 40, 40)
-            pygame.draw.rect(screen, color, (x, y, 60, 60))
-            pygame.draw.rect(screen, 'white', (x, y, 60, 60), width=5)
-            x -= 55
+            pygame.draw.rect(screen, color, (x, y, size, size))
+            pygame.draw.rect(screen, 'white', (x, y, size, size), width=5)
+            x -= 70 * PERCENT_SCALE
             if self.items[i]:
-                screen.blit(self.items[i].image, (x + 65, y + 10))
+                screen.blit(self.items[i].image, (x + 78 * PERCENT_SCALE, y + 8 * PERCENT_SCALE))
 
+    # нанесение урона игроку
     def remove_health(self):
         if self.armor != 0:
             self.armor -= 1
@@ -213,12 +223,14 @@ class Player(pygame.sprite.Sprite):
             if self.health != 0:
                 self.health -= 1
 
+    # изменение выбранной ячейки
     def set_select_cell(self, y):
         self.select_cell -= y
         if self.select_cell < 0:
             self.select_cell = 4
         self.select_cell %= 5
 
+    # использование предмета
     def use_item(self):
         if self.using_item is None:
             if self.items[self.select_cell]:
@@ -229,12 +241,14 @@ class Player(pygame.sprite.Sprite):
             self.load_circle = None
             self.using_item = None
 
+    # удаление предмета
     def remove_item(self):
         select = self.using_item if self.using_item else self.select_cell
         self.items[select].use(self)
         self.items[select] = None
         self.using_item = None
 
+    # выброс предмета
     def drop_item(self):
         my_item = self.items[self.select_cell]
         for item in ITEMS_PAIR:
@@ -243,14 +257,19 @@ class Player(pygame.sprite.Sprite):
                 self.items[self.select_cell] = None
                 break
 
+    # поднятие предмета
     def pick_up_item(self):
         if self.items[self.select_cell] is None:
+            self.sound_pick_up.set_volume(self.volume)
+            self.sound_pick_up.play()
+
             for sprite in items_group:
                 if sprite.rect.collidepoint(self.rect.center):
                     self.items[self.select_cell] = sprite.pick_up()
                     sprite.kill()
                     break
 
+    # задаёт параматры слепоты игрока полсе взрыва световой гранаты
     def blind(self, grenade):
         vec = vec2(self.rect.centerx - grenade.rect.centerx,
                    (self.rect.centery - grenade.rect.centery))
@@ -297,6 +316,7 @@ class Player(pygame.sprite.Sprite):
         self.v_blind = blind / time * self.dt
         self.volume = 1 - 1 / 100 * percent
 
+    # русует слепоту для игрока
     def draw_blind(self, screen):
         surface = pygame.Surface((self.w, self.h), pygame.SRCALPHA)
         surface.fill((255, 255, 255, min(self.blind_effect, 255)))

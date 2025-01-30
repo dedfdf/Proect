@@ -1,5 +1,5 @@
 from draw import draw_dark
-from main_funс import load_image
+from main_func import load_image
 
 
 # Класс тьмы на карте

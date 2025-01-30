@@ -1,6 +1,6 @@
 from consts import VIEW
 from draw import draw_view
-from main_funс import load_image
+from main_func import load_image
 
 
 # Класс вида игрока

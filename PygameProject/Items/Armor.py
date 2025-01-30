@@ -1,13 +1,13 @@
-from main_funс import load_image
 from player.Load_circle import Load_circle
 from consts import ARMOR_COLOR_LOAD_CIRCLE, ARMOR_COLOR_BORDER_LOAD_CIRCLE, MAX_ARMOR
 import pygame
+from image_scale import armor_icon, armor
 from sprite import not_visible_object_group, all_sprite, items_group
 
 
 class ArmorIcon:
     def __init__(self):
-        self.image = load_image(f'icon/armor_icon.png', 'items')
+        self.image = armor_icon
 
     def load(self, player):
         if player.armor != MAX_ARMOR:
@@ -22,7 +22,7 @@ class ArmorIcon:
 class Armor(pygame.sprite.Sprite):
     def __init__(self, player):
         super().__init__(not_visible_object_group, items_group, all_sprite)
-        self.image = load_image(f'icon/armor.png', 'items')
+        self.image = armor
         self.pos_center = list(player.rect.center)
         self.rect = self.image.get_rect(center=self.pos_center)
 

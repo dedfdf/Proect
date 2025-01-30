@@ -8,7 +8,7 @@ class Pistol(Frames):
     name = 'pistol'
     arr_status = ['idle', 'attack', 'move', 'reload', 'shoot']
     radius = 20
-    r_view, r_shoot = VIEW, 450
+    r_view, r_shoot = VIEW, 550
 
     idle_angle_shoot = 5
     walk_angle_shoot = 20
@@ -17,7 +17,7 @@ class Pistol(Frames):
     speed_set_angle = 30
     speed_aim_angle = 2
 
-    dx, dy = 65, 56
+    dx, dy = 56, 46
     dx_attack, dy_attack = -3, -2
 
     patron = START_PATRON_PISTOL - CLIP_PATRON_PISTOL

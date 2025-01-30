@@ -8,7 +8,7 @@ class Shotgun(Frames):
     name = 'shotgun'
     arr_status = ['idle', 'attack', 'move', 'reload', 'shoot']
     radius = 20
-    r_view, r_shoot = VIEW, 300
+    r_view, r_shoot = VIEW, 320
 
     idle_angle_shoot = 30
     walk_angle_shoot = 40
@@ -17,8 +17,8 @@ class Shotgun(Frames):
     speed_set_angle = 60
     speed_aim_angle = 1
 
-    dx, dy = 65, 55
-    dx_attack, dy_attack = -7, -29
+    dx, dy = 55, 45
+    dx_attack, dy_attack = -8, -36
 
     patron = START_PATRON_SHOTGUN - CLIP_PATRON_SHOTGUN
     clip_patron = CLIP_PATRON_SHOTGUN

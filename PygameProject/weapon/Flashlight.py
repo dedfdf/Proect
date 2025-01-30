@@ -17,8 +17,8 @@ class Flashlight(Frames):
     speed_set_angle = 10
     speed_aim_angle = 10
 
-    dx, dy = 65, 61
-    dx_attack, dy_attack = -3, -8
+    dx, dy = 55, 51
+    dx_attack, dy_attack = -3, -10
 
     patron = 'infinity'
     clip_patron = 'infinity'

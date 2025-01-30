@@ -1,17 +1,19 @@
 from PIL import Image, ImageDraw
 import math
-from consts import R_LOAD_CIRCLE
+from consts import R_LOAD_CIRCLE, PERCENT_SCALE
 
 
 # Ресует коллизию для игрока
 def draw_circle(r, name):
-    w = r * 2 + 1
-    h = r * 2 + 1
+    r *= PERCENT_SCALE
+    w = round(r * 2 + 1)
+    h = round(r * 2 + 1)
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     x = w / 2
     y = h / 2
     draw = ImageDraw.Draw(im, 'RGBA')
     draw.ellipse((x - r, y - r, x + r, y + r), outline=(255, 0, 0, 255))
+    draw.point((x, y), fill=(255, 0, 0, 255))
 
     im.save(f'collision_image/circle_{name}.png')
     return name
@@ -48,9 +50,9 @@ def draw_view(arr, r):
 
     im.save('image/view.png')
 
-
+# рисует круг закгрзки под игроком
 def draw_load_circle(color, color_border, e_angle):
-    w = h = R_LOAD_CIRCLE
+    w = h = round(R_LOAD_CIRCLE * PERCENT_SCALE)
 
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     draw = ImageDraw.Draw(im, 'RGBA')

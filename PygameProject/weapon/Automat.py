@@ -8,7 +8,7 @@ class Automat(Frames):
     name = 'automat'
     arr_status = ['idle', 'attack', 'move', 'reload', 'shoot']
     radius = 20
-    r_view, r_shoot = VIEW, 550
+    r_view, r_shoot = VIEW, 700
 
     idle_angle_shoot = 2
     walk_angle_shoot = 20
@@ -17,8 +17,8 @@ class Automat(Frames):
     speed_set_angle = 60
     speed_aim_angle = 6
 
-    dx, dy = 65, 55
-    dx_attack, dy_attack = -7, -29
+    dx, dy = 55, 45
+    dx_attack, dy_attack = -8, -36
 
     patron = START_PATRON_AUTOMAT - CLIP_PATRON_AUTOMAT
     clip_patron = CLIP_PATRON_AUTOMAT

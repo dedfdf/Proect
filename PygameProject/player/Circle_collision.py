@@ -1,6 +1,6 @@
 import pygame
 from sprite import all_sprite, collision_circle_group
-from main_funс import load_image
+from main_func import load_image
 
 
 # Коллизия игрока

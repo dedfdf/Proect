@@ -17,3 +17,10 @@ items_visible_object_groups = group()  # группа предметов, кот
 visible_object_group = group()  # объекты, которые игрок видит
 icon_group = group()  # все иконки во время игры
 opponents_group = group()  # группа противников
+dust_group = group()  # группа пыли
+
+all_group = [all_sprite, cursor_group, grass_group, object_group, box_group, bullet_group,
+             player_group, wall_group, collision_circle_group, object_block_visible_group,
+             not_visible_object_group, items_group, grenade_group, items_visible_object_groups,
+             visible_object_group, icon_group, opponents_group, dust_group]
+#  список всех групп

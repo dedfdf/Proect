@@ -1,7 +1,6 @@
-from main_funс import get_frame
+from main_func import get_frame
 import pygame
 from player.Bullet import Bullet
-from consts import FPS
 
 
 # Класс для смены фреймов всех оружей

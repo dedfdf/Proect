@@ -17,7 +17,7 @@ class Knife(Frames):
     speed_set_angle = 10
     speed_aim_angle = 10
 
-    dx, dy = 61, 59
+    dx, dy = 51, 49
     dx_attack, dy_attack = 0, 0
 
     patron = 'infinity'

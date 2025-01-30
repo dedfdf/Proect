@@ -2,6 +2,7 @@ from draw import draw_load_circle
 from consts import TIME_LOADING, FPS
 
 
+# загрузочная окружность
 class Load_circle:
     def __init__(self, color, color_border, player):
         self.angle = 271

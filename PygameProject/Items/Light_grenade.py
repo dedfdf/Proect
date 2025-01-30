@@ -1,4 +1,4 @@
-from main_funс import load_image
+from image_scale import light_grenade_icon, light_grenade
 import pygame
 from sprite import not_visible_object_group, all_sprite, items_group, grenade_group, \
     object_block_visible_group, opponents_group
@@ -9,7 +9,7 @@ import math
 
 class LightGrenadeIcon:
     def __init__(self):
-        self.image = load_image(f'icon/light_grenade_icon.png', 'items')
+        self.image = light_grenade_icon
 
     def load(self, player):
         # нету лоудинг
@@ -22,7 +22,7 @@ class LightGrenadeIcon:
 class LightGrenade(pygame.sprite.Sprite):
     def __init__(self, player, type=0):
         super().__init__(not_visible_object_group, items_group, all_sprite)
-        self.image = load_image(f'icon/light_grenade.png', 'items')
+        self.image = light_grenade
         self.pos_center = list(player.rect.center)
         self.rect = self.image.get_rect(center=self.pos_center)
 
@@ -68,7 +68,7 @@ class LightGrenade(pygame.sprite.Sprite):
                         self.vec_x_y[0] *= -1
                         flag_x = 0
 
-            self.pos_center += vec
+            self.rect.centery += vec.y
 
             for group in arr_spriteGroup:
                 for sprite in group:
@@ -78,9 +78,9 @@ class LightGrenade(pygame.sprite.Sprite):
                         flag_y = 0
 
             if flag_x:
-                self.rect.centerx += vec.x
-            if not flag_y:
-                self.rect.centery -= vec.y
+                self.pos_center[0] += vec.x
+            if flag_y:
+                self.pos_center[1] += vec.y
 
             if not flag_x or not flag_y:
                 self.sound_conflict.play(0)

@@ -1,28 +1,21 @@
 import pygame
 import time
-import sys
-from weapon.Pistol import Pistol
-from weapon.Automat import Automat
 from weapon.Knife import Knife
-from weapon.Shotgun import Shotgun
 from weapon.Flashlight import Flashlight
 from player.Weapon import Weapons
 from player.Player import Player
 from player.View import View
 from sprite import *
-from consts import TILE_WIDTH, TILE_HEIGHT, FPS, R_LOAD_CIRCLE
-from main_funс import load_image, player_rotate, check_visible, create_visible
-from PygameProject.game.Camera import Camera
-from PygameProject.game.Cursor import Cursor
-from PygameProject.game.Dark import Dark
+from consts import TILE_WIDTH, TILE_HEIGHT, FPS, R_LOAD_CIRCLE, PERCENT_SCALE, TIME_LOAD
+from main_func import load_image, player_rotate, check_visible, create_visible, terminate
+from game.Camera import Camera
+from game.Cursor import Cursor
+from game.Dark import Dark
+from Dust import Dust
+from all_screens.pause import pause
 
-tile_image = {'wall': load_image('derevo.jpg'), 'empty': load_image('wood.png'),
+tile_image = {'wall': load_image('derevo.png'), 'empty': load_image('wood.jpg'),
               'stone': load_image('stone.png'), 'pl': load_image('pl.png')}
-
-
-def terminate():
-    pygame.quit()
-    sys.exit()
 
 
 def load_level(name):
@@ -37,8 +30,13 @@ class Tile(pygame.sprite.Sprite):
         super().__init__(*group, all_sprite)
 
         self.image = tile_image[object_type]
-        self.pos_center = [pos_x * TILE_WIDTH + self.image.width,
-                           pos_y * TILE_HEIGHT + self.image.height]
+        w = self.image.width * PERCENT_SCALE
+        h = self.image.height * PERCENT_SCALE
+        self.image = pygame.transform.scale(self.image, (w, h))
+
+        self.pos_center = [pos_x * TILE_WIDTH * PERCENT_SCALE + TILE_WIDTH * PERCENT_SCALE,
+                           pos_y * TILE_HEIGHT * PERCENT_SCALE + TILE_HEIGHT * PERCENT_SCALE]
+
         self.rect = self.image.get_rect(center=self.pos_center)
         self.x, self.y = self.rect.x, self.rect.y
         self.mask = pygame.mask.from_surface(self.image)
@@ -65,12 +63,13 @@ def generate_level(level, weapon, width, height):
                 new_player = Player(x, y, weapon, width, height)
     return new_player, x, y
 
-
-def main(screen, width, height, clock):
+# игровой цикл
+def game_cycle(screen, width, height, clock, arsenal, level, num_save):
     pygame.mouse.set_visible(False)
-    weapon = Weapons([Automat(), Shotgun(), Pistol(), Knife(), Flashlight()])
+    weapon = Weapons(arsenal)
 
-    player, level_x, level_y = generate_level(load_level('level1.txt'), weapon, width, height)
+    player, level_x, level_y = generate_level(load_level(f'level{level}.txt'), weapon, width,
+                                              height)
 
     Dark(width, height, player)
     weapon.get_collision(player)
@@ -79,52 +78,73 @@ def main(screen, width, height, clock):
     camera = Camera(player, width, height)
     cursor = Cursor(pygame.mouse.get_pos())
 
-    flag = 1
-
     button_num = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_f]
-    prev_time = time.time()
+
+    prev = time.time()
+    time_dust = 0
+    time_dark = 0
+    all_time = 0
 
     check_visible(player)
 
-    while flag:
+    surf_dark_load = pygame.Surface((width, height), pygame.SRCALPHA)
+    load = (0,)
+
+    while True:
 
         clock.tick(FPS)
 
         now = time.time()
-        dt = now - prev_time
-        prev_time = now
+        dt = now - prev
+        prev = now
+        if load:
+            time_dark += dt
+        all_time += dt
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                flag = 0
+                terminate()
             if event.type == pygame.MOUSEMOTION:
                 cursor.move(event.pos)
-            if not player.load_circle:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r:
-                        player.set_status('reload')
-                    elif event.key == pygame.K_q:
-                        player.set_status('attack')
-                    elif event.key in button_num:
-                        for en, even in enumerate(button_num):
-                            if even == event.key:
-                                player.swich_weapon(en)
-                                break
-                    elif event.key == pygame.K_g:
-                        player.drop_item()
-                    elif event.key == pygame.K_e:
-                        player.pick_up_item()
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    if type(weapon.weapon) is Knife or type(weapon.weapon) is Flashlight:
-                        player.set_status('attack')
-                    else:
-                        player.set_status('shoot')
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_v:
-                    player.remove_health()
+            if not load:
+                if not player.load_circle:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_r:
+                            player.set_status('reload')
+                        elif event.key == pygame.K_q:
+                            player.set_status('attack')
+                        elif event.key in button_num:
+                            for en, even in enumerate(button_num):
+                                if even == event.key:
+                                    player.swich_weapon(en)
+                                    break
+                        elif event.key == pygame.K_g:
+                            player.drop_item()
+                        elif event.key == pygame.K_e:
+                            player.pick_up_item()
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                        if type(weapon.weapon) is Knife or type(weapon.weapon) is Flashlight:
+                            player.set_status('attack')
+                        else:
+                            player.set_status('shoot')
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_v:
+                        player.remove_health()
+
             if event.type == pygame.MOUSEWHEEL:
                 player.set_select_cell(event.y)
+
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 player.use_item()
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE and not load:
+                pygame.mouse.set_visible(True)
+                quit_param = pause(screen, width, height, clock)
+                pygame.mouse.set_visible(False)
+
+                if quit_param:
+                    load = (1,)
+
+                prev = time.time()
 
         screen.fill('black')
 
@@ -172,8 +192,54 @@ def main(screen, width, height, clock):
 
         player.draw_icon(screen)
 
+        if player.health == 0 or len(opponents_group) == 0:
+            load = (1,)
+
+        if time_dust > 0.3:
+            time_dust = 0
+            Dust(width, height)
+        else:
+            time_dust += dt
+        for sprite in dust_group:
+            surf = sprite.render(dt)
+            x, y = sprite.center
+            r = sprite.r
+            screen.blit(surf, (x - r, y - r))
+
         if player.blind_effect:
             player.draw_blind(screen)
 
+        if load:
+            if time_dark <= TIME_LOAD:
+                if load[0] == 0:
+                    transparency = 100 - time_dark / (TIME_LOAD / 100)
+                elif load[0] in [1, 2]:
+                    transparency = time_dark / (TIME_LOAD / 100)
+
+                transparency = 255 / 100 * transparency
+
+                surf_dark_load.fill((0, 0, 0, 0))
+                pygame.draw.rect(surf_dark_load, (0, 0, 0, transparency),
+                                 (0, 0, width, height))
+                screen.blit(surf_dark_load, (0, 0))
+
+            else:
+                time_dark = 0
+                if load[0] == 0:
+                    load = 0
+
+                elif load[0] == 1:
+                    pygame.mouse.set_visible(True)
+
+                    res = 0
+                    if player.health == 0:
+                        res = 1
+                    elif len(opponents_group) == 0:
+                        res = (level, all_time)
+
+                    for group in all_group:
+                        group.empty()
+
+                    return res
+
         pygame.display.flip()
-    pygame.quit()

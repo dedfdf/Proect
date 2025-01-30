@@ -16,6 +16,7 @@ class Camera:
         else:
             object.pos_center[0] += self.dx
             object.pos_center[1] += self.dy
+
     # Обновляет вектор сдвига
     def update(self, target):
         x = target.rect.centerx + target.dx
