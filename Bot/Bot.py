@@ -40,7 +40,6 @@ class Bot(pygame.sprite.Sprite):
                     -3 < self.rect.center[1] - self.graph.map[coord[1]][coord[0]][3].rect.center[1] < 3):
                 self.memory.pop(0)
                 self.pos_x, self.pos_y = coord
-                print(self.pos_x, self.pos_y)
         else:
             s = random.choice(self.graph.map_empty)
             self.memory = self.find_way((5, 7))
