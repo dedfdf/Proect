@@ -8,7 +8,7 @@ from consts import TILE_WIDTH, TILE_HEIGHT
 from main_funс import load_image
 
 
-class Bot(pygame.sprite.Sprite):
+class Bot(pygame.sprite.Sprite):  #  Создаёт бота
     def __init__(self, pos_x, pos_y, graph, weapon):
         super().__init__(opponents_group, not_visible_object_group, all_sprite)
         self.image = self.orig_image = weapon.image
@@ -24,11 +24,11 @@ class Bot(pygame.sprite.Sprite):
         self.graph = graph
         self.angel = 270
 
-    def find_way(self, coord):
+    def find_way(self, coord):  # Находит путь
         v = self.graph.bfs((self.pos_x, self.pos_y), coord)
         return v
 
-    def update(self):
+    def update(self):  # Обновляет действие бота
         coord_bot = self.pos_x, self.pos_y
         if self.memory:
             coord = self.memory[0]
@@ -42,18 +42,17 @@ class Bot(pygame.sprite.Sprite):
                 self.pos_x, self.pos_y = coord
         else:
             s = random.choice(self.graph.map_empty)
-            self.memory = self.find_way((5, 7))
-
+            self.memory = self.find_way(s)
             if self.memory:
                 self.memory = self.memory[1:]
 
-    def where_player(self, coord_player):
+    def where_player(self, coord_player):  # Планируется для нахождения игрока
         return math.sqrt((self.rect.x - coord_player[0]))
 
-    def trigger(self):
+    def trigger(self):  # Планируется для обнаружения игрока
         pass
 
-    def povorot(self, coord):
+    def povorot(self, coord):  # Поворачивает бота
         angels = {(0, 1): 270, (1, 1): 315, (1, 0): 0, (-1, 0): 180, (0, 0): 0, (1, -1): 45, (0, -1): 90, (-1, 1): 225,
                   (-1, -1): 135}
         if abs(angels[coord] - self.angel) >= 180 and self.angel != angels[coord]:

@@ -1,9 +1,8 @@
 from collections import defaultdict
-
 import pygame.draw
 
 
-class Graphs:
+class Graphs:  # Класс графов
     def __init__(self, w, h):
         self.graph = defaultdict(list)
         self.w = w
@@ -11,10 +10,10 @@ class Graphs:
         self.map_empty = []
         self.bot_spisok = []
 
-    def add_edge(self, u, v):
+    def add_edge(self, u, v):  # Добавление пути в вершины
         self.graph[u].append(v)
 
-    def bfs(self, start, end):
+    def bfs(self, start, end):  # Нахождение пути
         visited = set()
         queue = []
         queue.append([start])
@@ -33,23 +32,20 @@ class Graphs:
                         return new_path
                 visited.add(node)
 
-    def add_in_map(self, x, y, object, circle):
+    def add_in_map(self, x, y, object, circle):  # Добавление объектов на карту
         self.map[y][x] = (x, y, object, circle)
         if object == 'empty':
             self.map_empty.append((x, y))
 
-    def create_map(self, size_x, size_y):
+    def create_map(self, size_x, size_y):  # Создаёт карту уровня для графов
         self.map = [[(i, j) for j in range(size_x)] for i in range(size_y)]
         self.size_x = size_x
         self.size_y = size_y
 
-    def add_bot_coord(self, x, y, bot):
+    def add_bot_coord(self, x, y, bot):  # Добавляет местоположение бота
         self.bot_spisok.append((x, y, bot))
 
-    def add_player_coord(self, x, y):
-        self.player_coord = (x, y)
-
-    def graph_connect(self):
+    def graph_connect(self):  # Соединяет все графы
         for k in self.map_empty:
             i = k[1]
             j = k[0]
