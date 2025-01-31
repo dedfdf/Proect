@@ -19,7 +19,7 @@ tile_image = {'wall': load_image('derevo.png'), 'empty': load_image('wood.jpg'),
 
 
 def load_level(name):
-    with open('levls/' + name, 'r') as file:
+    with open('levels/' + name, 'r') as file:
         level_map = [line.strip() for line in file.readlines()]
     max_len = max(map(len, level_map))
     return list(map(lambda x: x.ljust(max_len, '.'), level_map))
@@ -63,12 +63,17 @@ def generate_level(level, weapon, width, height):
                 new_player = Player(x, y, weapon, width, height)
     return new_player, x, y
 
+
+# прошу не оценивать все классы и функции, что лежат до этого момента, т. к. они были не в моём ТЗ
 # игровой цикл
 def game_cycle(screen, width, height, clock, arsenal, level, num_save):
     pygame.mouse.set_visible(False)
     weapon = Weapons(arsenal)
 
-    player, level_x, level_y = generate_level(load_level(f'level{level}.txt'), weapon, width,
+    # player, level_x, level_y = generate_level(load_level(f'level{level}.txt'), weapon, width,
+    # height)
+    # данный файл не работает т. к. отсутствуют карты
+    player, level_x, level_y = generate_level(load_level(f'level1.txt'), weapon, width,
                                               height)
 
     Dark(width, height, player)

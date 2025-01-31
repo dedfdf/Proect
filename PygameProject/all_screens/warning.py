@@ -4,6 +4,9 @@ from consts import PERCENT_SCALE
 from init import width, height
 
 
+# класс для повторного предупреждения
+# класс был реализован один из первых в начальных экранах, из-за этого является очень плохим
+# времени на исправление нету
 class Warning:
     def __init__(self, text, yes, no, add_funcs):
         self.size = 500 * PERCENT_SCALE, 281.25 * PERCENT_SCALE
@@ -30,7 +33,7 @@ class Warning:
 
         self.version = [Button(pos_y, 'Да', 1, size_text),
                         Button(pos_n, 'Нет', 0, size_text)]
-        funcs = [(yes, ), (no, )]
+        funcs = [(yes,), (no,)]
         add_funcs(funcs, self.version)
 
         pygame.draw.rect(self.surf, 'white',
