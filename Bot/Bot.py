@@ -53,7 +53,7 @@ class Bot(pygame.sprite.Sprite):  # Создаёт бота
         pass
 
     def povorot(self, coord):  # Поворачивает бота
-        angels = {(0, 1): 270, (1, 1): 315, (1, 0): 0, (-1, 0): 180, (0, 0): 0, (1, -1): 45, (0, -1): 90, (-1, 1): 225,
+        angels = {(0, 1): 270, (1, 1): 315, (1, 0): 360, (-1, 0): 180, (0, 0): 0, (1, -1): 45, (0, -1): 90, (-1, 1): 225,
                   (-1, -1): 135}
         if abs(angels[coord] - self.angel) >= 180 and self.angel != angels[coord]:
             self.angel -= 15

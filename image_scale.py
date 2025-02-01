@@ -7,7 +7,6 @@ percent = PERCENT_SCALE
 
 # изменяет разрешение объекта
 def set_scale(im):
-    print(im.get_size())
     w, h = im.get_size()
     im = scale(im, (w * percent, h * percent))
     return im
